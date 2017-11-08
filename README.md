@@ -2,7 +2,7 @@
 Jacob Schwartz  
 August 30, 2017  
   
-#Synopsis
+# Synopsis
   
 This project involves exploring the U.S. National Oceanic and Atmospheric Administration's (NOAA) storm database. This database tracks characteristics of major storms and weather events in the United States, including when and where they occur, as well as estimates of any fatalities, injuries, and property or crop damage. NOAA has maintained this database of storm events since 1950. 
 
@@ -15,10 +15,10 @@ This project involves exploring the U.S. National Oceanic and Atmospheric Admini
 
 *Note: Although the data goes as far back as 1950, it wasn't until 1996 that NOAA created a list of 48 standardized event types. Events prior to 1996 were classed into fewer types, and even after 1996 many reports of storm events do not stick to the official list of events. For the purposes of this analysis, we will observe the data both in total and with the data post 1995 separated out, and determine which, if either, is more suited to our needs.*
 
-#Data Processing
+# Data Processing
   
   
-###1. Loading Libraries
+### 1. Loading Libraries
   
 In order to process the data and results, we first need to initialize a few libraries. Plyr, dplyr and reshape2 are for data cleaning and processing purposes, while ggplot2 and gridExtra are for presentation of the results.
   
@@ -32,7 +32,7 @@ library(gridExtra)
 ```
   
   
-###2. Loading Data
+### 2. Loading Data
   
 The next step is to download and extract the data from NOAA. We'll go with a straight extraction for simplicity, though there are potentially faster means of doing so with such heavily compressed data. We'll also move the extracted data to a new variable, in case we do any manipulations but still want to refer back to the original extraction. This prevents having to go back and re-extract the data repeatedly.
   
@@ -99,7 +99,7 @@ There are a few things we can see from the output above:
 - And finally, at least for now, all of the date and time variables are stored as factors. We'll have to make sure these are reformated to a standard format at some point, or we won't be able to filter the dates consistently (or potentially graph by them continuously).
   
   
-###3. Cleaning Event Types
+### 3. Cleaning Event Types
   
 For the moment, we can put the many variables issue aside and focus on the other three cleaning issues. So let's start by cleaning the Event Types.
 
@@ -264,7 +264,7 @@ print(sum(check2)/nrow(StormData)*100) #see what percent of the EVTYPE data is s
 From the results above we can see that the top remaining unofficial event type now has a mere 82 instances in `EVTYPE`, and all of the remaining unofficial event types amount to only **0.2%** of the data. That's a job well done.
 
 
-###4. Cleaning Property and Crop Damage Values
+### 4. Cleaning Property and Crop Damage Values
 
 Next on our list is cleaning the property and crop damage cost variables. In this case, however, we don't really need to worry about the actual `PROPDMG` and `CROPDMG` variables themselves, as they're in decent shape. The issue we saw earlier pertained to `PROPDMGEXP` and `CROPDMGEXP`, which, according to the documentation, are the exponential components of the cost values given.
 
@@ -353,7 +353,7 @@ print(table(StormData$CROPDMGEXP))
 Looks much better!
 
 
-###5. Cleaning Dates
+### 5. Cleaning Dates
 
 Last on our original list of items to fix were the dates. This one is easy, as we're simply standardizing each of the dates to be `Date` class variables in a basic `"%m/%d/%Y"` format.
 
@@ -391,7 +391,7 @@ What we can see above is that the data pre-1996 is over **27%** of our values. T
 We weren't planning to do any filtering right now anyway, but this is going to be important to keep in mind once we start consolodating the data into summaries (which happens to be our next task).
 
 
-###6. Narrowing and Summarizing The Data
+### 6. Narrowing and Summarizing The Data
 
 Now that we're done cleaning the data, it's time to start shaping the storm data into a form that can answer our original questions. Just to refresh, those questions were:
 
@@ -446,7 +446,7 @@ StormData_CropDMG_Tot<-summarize(StormData_Modern,CROPDMG=sum(CROPDMG))%>%
 Now we can finally see what our summaries look like (average of each category comes first, then total).
 
 
-####**Fatalities**
+#### **Fatalities**
 
 ```r
 print(head(StormData_Fatalities_Avg)) #take a look at the summary results
@@ -480,7 +480,7 @@ print(head(StormData_Fatalities_Tot))
 6         flood        444
 ```
 
-####**Injuries**
+#### **Injuries**
 
 ```r
 print(head(StormData_Injuries_Avg)) #similar distributions of effects for fatalities and injuries
@@ -514,7 +514,7 @@ print(head(StormData_Injuries_Tot))
 6       flashflood     1674
 ```
 
-####**Property Damage Cost**
+#### **Property Damage Cost**
 
 ```r
 print(head(StormData_PropDMG_Avg))
@@ -548,7 +548,7 @@ print(head(StormData_PropDMG_Tot))
 6             hail  14595143420
 ```
 
-####**Crop Damage Cost**
+#### **Crop Damage Cost**
 
 ```r
 print(head(StormData_CropDMG_Avg)) #more prop dmg from droughts, more prop dmg from storm surges
@@ -701,7 +701,7 @@ EconomicCostTot_Molten<-EconomicCostTot_Molten[1:20,]%>%rename(Types_of_Damage=v
 And that's it. We could continue to manipulate the data in a million other ways (such as figuring out the top disaster type in each state), but at this point we have plenty of material to answer the questions at hand.  It's time to see our results.
 
 
-#Results
+# Results
 
 When we started this analysis of the storm database from NOAA, we posed two questions:
 
@@ -710,7 +710,7 @@ When we started this analysis of the storm database from NOAA, we posed two ques
 
 After thoroughly analyzing and summarizing the data, we've decided to approach both questions from two angles. The results of these approaches are below.
 
-###Average Impacts and Costs
+### Average Impacts and Costs
 
 
 ```r
@@ -738,7 +738,7 @@ Our first approach was to look at the average human impacts (from fatalities and
 2. The second graph is slightly less clear, as it is a scaled graph of log10(cost). With this in mind, however, it quickly becomes evident that, on average, **hurricanes** have costs that are literal orders of magnitude higher than other disaster events. That being said, **storm surges** are not too too far behind. One thing to note, though, is that storm surges generally accompany hurricanes. So in reality the top two disasters on this graph are essentially one and the same, and their economic consequences are simply amplified further.
 
 
-###Total Impacts and Costs
+### Total Impacts and Costs
 
 
 ```r
@@ -774,12 +774,12 @@ Our second approach wass to look at the total human impacts (from fatalities and
 2. As for economic consequences, this time **floods** cost the US the most by a long shot (the y axis is in terms of billions of dollars). In this case, though, **hurricanes** (which had the highest average costs) do at least come in second, at about half the total cost of floods. This is again likely do to the frequency of floods versus hurricanes. One other very notable item is that **draughts** are far an away the most costly disasters in terms of crop damage, as can be seen from the stacked bar on the left. In fact, while property damage is clearly quite a bit more costly than crop damage generally, the amount of crop damage caused by draughts makes it chart at high property damage levels.
 
 
-###Overall Assessment
+### Overall Assessment
 
 **Overall, we can probably state that excessive heat is the most dangerous disaster for population health, as it's present in the top 3 for *both* the average and the absolute approaches. Similarly we can safely say that hurricanes have the greatest economic consequences from a general standpoint.**
 
 
-####Additional Notes
+#### Additional Notes
 
 It would not be wise to put too much weight on this analysis. Though we captured more than 99% of the values recorded, it is still limited in many ways. For one things, the recording of event types is extremely imprecise, and therefore some of our re-workin of the `EVTYPE` data may have been faulty. And considering the level of disarray of this variable, there are no doubt many other errors that we didn't see in this brief exercise. The improper coding of even just one crop or property damage exponent from a K or M to a B would throw out the entire analysis. Additionally, it is possible that one of the very few event types we ignored was a single record with *huge* human or economic impacts. Such an occurence could severely skew our results.
 
@@ -788,9 +788,9 @@ Another thing that would be worth considering is inflation adjusted figures in t
 Suffice it to say that while we can draw broad conclusions from our analysis, this is only a first step in really answering our core questions about natural disasters in the United State.
 
 
-##Appendix
+## Appendix
 
-####Data:
+#### Data:
 
 The data itself comes in the form of a comma-separated-value file compressed via the bzip2 algorithm to reduce its size. You can download the file here:
 
@@ -802,7 +802,7 @@ There is also documentation of the database available, where you can find how so
 - [National Climatic Data Center Storm Events FAQ](https://d396qusza40orc.cloudfront.net/repdata%2Fpeer2_doc%2FNCDC%20Storm%20Events-FAQ%20Page.pdf)
 
 
-####Session info for reproducibility:
+#### Session info for reproducibility:
 
 
 ```r
